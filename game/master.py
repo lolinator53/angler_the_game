@@ -1,27 +1,42 @@
-from ui.menu import menu
+import _pickle as pickle
+
+from ui.menu import caught_menu
 from game import fishing
+from game import chances
 
 
-def reward(result):
+def reward(result, fish):
     if result > 9500:
-        print('WOW!!! Legendary')
-        decide(menu('WOW, you caught a legendary fish!', ['Fish again', 'Sell', 'Marketplace', 'Quit'], 'red'))
-    elif result > 7000:
-        print('gibe da purplez')
-        decide(menu('That\'s a purple', ['Fish again', 'Sell', 'Marketplace', 'Quit'], 'red'))
-    elif result > 3500:
-        print('Blueberries ')
-        decide(menu('Damn, blue', ['Fish again', 'Sell', 'Marketplace', 'Quit'], 'red'))
+        fish.rarity = 'legendary'
+        fish.name = chances.decide_name(fish.rarity)
+        fish.weight = chances.calc_weight('legen')
+        decide(caught_menu('legen.txt', fish))
+    elif result > 8000:
+        fish.rarity = 'purple'
+        fish.name = chances.decide_name(fish.rarity)
+        fish.weight = chances.calc_weight('purp')
+        decide(caught_menu('purp.txt', fish))
+    elif result > 5500:
+        fish.rarity = 'blue'
+        fish.name = chances.decide_name(fish.rarity)
+        fish.weight = chances.calc_weight('blue')
+        decide(caught_menu('blue.txt', fish))
     elif result > 0:
-        print('Could have been better (green)')
-        decide(menu('I mean, better than nothing?', ['Fish again', 'Sell', 'Marketplace', 'Quit'], 'red'))
+        fish.rarity = 'green'
+        fish.name = chances.decide_name(fish.rarity)
+        fish.weight = chances.calc_weight('green')
+        decide(caught_menu('green.txt', fish))
     else:
-        print('go shower dude')
-        decide(menu('Yeah, that\'s nothing', ['Fish again', 'Sell', 'Marketplace', 'Quit'], 'red'))
+        decide(caught_menu('nothing.txt', None))
 
 
 def decide(val):
-    if val == 0:
+    if val[0] == 0:
+        worth = eval_worth(val[1])
         fishing.fish()
-    elif val == 3:
+    elif val[0] == 3:
         exit(0)
+
+# TODO Wert mittels seltenheit und gewicht ermitteln
+def eval_worth(weight):
+    pass
